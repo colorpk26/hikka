@@ -4,24 +4,24 @@
 WORKING_DIR=$(pwd)
 
 runin() {
-	# Runs the arguments, piping stderr to logfile
-	{ "$@" 2>>"${WORKING_DIR}/hikka-install.log" || return $?; } | while read -r line; do
-		printf "%s\n" "$line" >>"${WORKING_DIR}/hikka-install.log"
-	done
+  # Runs the arguments, piping stderr to logfile
+  { "$@" 2>>"${WORKING_DIR}/hikka-install.log" || return $?; } | while read -r line; do
+    printf "%s\n" "$line" >>"${WORKING_DIR}/hikka-install.log"
+  done
 }
 
 runout() {
-	# Runs the arguments, piping stderr to logfile
-	{ "$@" 2>>"${WORKING_DIR}/hikka-install.log" || return $?; } | while read -r line; do
-		printf "%s\n" "$line" >>"${WORKING_DIR}/hikka-install.log"
-	done
+  # Runs the arguments, piping stderr to logfile
+  { "$@" 2>>"${WORKING_DIR}/hikka-install.log" || return $?; } | while read -r line; do
+    printf "%s\n" "$line" >>"${WORKING_DIR}/hikka-install.log"
+  done
 }
 
 errorin() {
-	cat "${WORKING_DIR}/hikka-install.log"
+  cat "${WORKING_DIR}/hikka-install.log"
 }
 errorout() {
-	cat "${WORKING_DIR}/hikka-install.log"
+  cat "${WORKING_DIR}/hikka-install.log"
 }
 
 ##############################################################################
@@ -40,17 +40,17 @@ printf "\r\033[0;34mPreparing for installation...\e[0m"
 
 # Удалено создание и изменение владельца файла hikka-install.log
 
-if [ -d "Hikka/hikka" ]; then
-	cd Hikka || {
-		printf "\rError: Install git package and re-run installer"
-		exit 6
-	}
-	DIR_CHANGED="yes"
+if [ -d "Heroku/hikka" ]; then
+  cd Heroku || {
+    printf "\rError: Install git package and re-run installer"
+    exit 6
+  }
+  DIR_CHANGED="yes"
 fi
 if [ -f ".setup_complete" ]; then
-	# If hikka is already installed by this script
-	PYVER="3"
-	printf "\rExisting installation detected. Hikka is already installed.\n"
+  # If hikka is already installed by this script
+  PYVER="3"
+  printf "\rExisting installation detected. Hikka is already installed.\n"
 fi
 
 ##############################################################################
@@ -66,21 +66,21 @@ printf "\n\r\033[0;34mCloning repo...\e[0m"
 
 ##############################################################################
 
-rm -rf "${WORKING_DIR}/Hikka"
-runout git clone https://github.com/coddrago/Heroku/ "${WORKING_DIR}/Hikka" || {
-	errorout "Clone failed."
-	exit 3
+rm -rf "${WORKING_DIR}/Heroku"
+runout git clone https://github.com/coddrago/Heroku/ "${WORKING_DIR}/Heroku" || {
+  errorout "Clone failed."
+  exit 3
 }
-cd "${WORKING_DIR}/Hikka" || {
-	printf "\r\033[0;33mRun: \033[1;33mpkg install git\033[0;33m and restart installer"
-	exit 7
+cd "${WORKING_DIR}/Heroku" || {
+  printf "\r\033[0;33mRun: \033[1;33mpkg install git\033[0;33m and restart installer"
+  exit 7
 }
 
 printf "\r\033[K\033[0;32mRepo cloned!\e[0m"
 printf "\n\r\033[0;34mCreating config.json...\e[0m"
 
 # Создаем файл config.json внутри папки Hikka
-cat > "${WORKING_DIR}/Hikka/config.json" <<EOL
+cat > "${WORKING_DIR}/Heroku/config.json" <<EOL
 {
     "api_id": 7301124,
     "api_hash": "46eb50618e7a00ca8b165275d9e0fe0b",
@@ -93,8 +93,8 @@ printf "\n\r\033[0;34mInstalling python dependencies...\e[0m"
 runin python$PYVER -m pip install --upgrade -q --disable-pip-version-check --no-warn-script-location -r requirements.txt
 runin python$PYVER -m pip install --upgrade pip setuptools wheel --user
 runin python$PYVER -m pip install -r requirements.txt --upgrade --user --no-warn-script-location --disable-pip-version-check || {
-	errorin "Requirements failed!"
-	exit 4
+  errorin "Requirements failed!"
+  exit 4
 }
 runin python$PYVER -m pip install -U urllib3 requests
 rm -f "${WORKING_DIR}/hikka-install.log"
